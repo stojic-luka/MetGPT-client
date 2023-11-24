@@ -31,6 +31,4 @@ public class MessagesView extends BorderPane {
         this.setCenter(messagesScroll);
         this.setStyle("-fx-background-color: #444654;");
     }
-    
-    
 }

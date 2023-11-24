@@ -12,27 +12,16 @@ import javafx.scene.paint.Color;
 
 public class NoteView extends StackPane {
 
+    private final MenuItem deleteItem;
+    private final MenuItem editItem;
+
     public NoteView(String title, String note) {
         Label titleLabel = new Label(title);
         Label noteLabel = new Label(note);
 
         ContextMenu contextMenu = new ContextMenu();
-        MenuItem editItem = new MenuItem("Edit");
-        editItem.setOnAction(e -> {
-            NoteView parentNote = (NoteView) titleLabel.getParent().getUserData();
-            String titleEdit = parentNote.getTitle();
-            String noteEdit = parentNote.getNote();
-
-            titleTextField.setText(titleEdit);
-            noteTextArea.setText(noteEdit);
-
-            addNoteDialog.show();
-            notesVBox.getChildren().remove(titleLabel.getParent());
-        });
-        MenuItem deleteItem = new MenuItem("Delete");
-        deleteItem.setOnAction(e -> {
-            notesVBox.getChildren().remove(titleLabel.getParent());
-        });
+        editItem = new MenuItem("Edit");
+        deleteItem = new MenuItem("Delete");
         contextMenu.getItems().addAll(editItem, deleteItem);
 
         VBox vBox = new VBox(titleLabel, noteLabel);
