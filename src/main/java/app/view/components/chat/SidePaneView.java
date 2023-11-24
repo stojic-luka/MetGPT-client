@@ -14,7 +14,7 @@ public class SidePaneView extends HBox {
 
     private boolean isSidePanelShowing = false;
 
-    private VBox chats;
+    private final VBox chats;
 
     public SidePaneView() {
         super();
@@ -59,9 +59,5 @@ public class SidePaneView extends HBox {
             }
             isSidePanelShowing = !isSidePanelShowing;
         });
-    }
-    
-    private void loadChats() {
-        
     }
 }
