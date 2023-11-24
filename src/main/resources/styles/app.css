@@ -1,0 +1,79 @@
+* {
+    -fx-font-family: 'Consolas';
+    -fx-font-size: 14px;
+}
+
+#messagesScroll,
+#messagesScroll .viewport
+{ -fx-background-color: transparent; }
+
+#textArea .scroll-pane,
+#textArea .scroll-pane .viewport,
+#textArea .scroll-pane .content
+{ -fx-background-color: transparent; }
+
+
+#textArea {
+    -fx-text-fill: #ebebec;
+    -fx-background-color: transparent;
+    -fx-font-size: 14px;
+}
+
+#textArea *.text {
+    -fx-text-alignment: left;
+}
+
+#prompt {
+    -fx-background-color: #40414F;
+    -fx-background-radius: 10px;
+}
+
+.senderName {
+    -fx-font-size: 16px;
+    -fx-font-weight: bold;
+}
+
+.message-bubble {
+    -fx-background-color: #343541;
+    -fx-text-fill: #D1D5DB;
+    
+    -fx-border-color: gray;
+    -fx-border-width: 1px;
+    -fx-background-radius: 10px;
+    -fx-border-radius: 10px;
+}
+.bot-message-bubble {
+    -fx-background-color: #444654;
+    -fx-text-fill: #ECECF1;
+    
+    -fx-border-color: gray;
+    -fx-border-width: 1px;
+    -fx-background-radius: 10px;
+    -fx-border-radius: 10px;
+}
+
+.notes > * {
+    -fx-background-color: #444654;
+}
+
+.note {
+    -fx-background-color: #343541;
+    -fx-border-color: gray;
+    -fx-border-width: 1px;
+    -fx-background-radius: 10px;
+    -fx-border-radius: 10px;
+}
+
+.note .label {
+    -fx-text-fill: #D1D5DB;
+}
+
+.scroll-pane {
+    -fx-background-color: #444654;
+}
+
+.text-field-custom {
+    -fx-background-color: #474859;
+    -fx-background-radius: 10px;
+    -fx-text-fill: #ebebec;
+}
