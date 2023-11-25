@@ -25,14 +25,6 @@ public class ChatsModel {
         chats.add(chat);
     }
 
-    public void removeChat(String title) {
-        for (Chat chat : chats) {
-            if (chat.getTitle().equals(title)) {
-                chats.remove(chat);
-            }
-        }
-    }
-
     public void removeChat(Chat chat) {
         if (chats.contains(chat)) {
             chats.remove(chat);

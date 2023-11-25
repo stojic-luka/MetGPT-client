@@ -13,8 +13,7 @@ import javafx.scene.paint.Color;
 public class NoteView extends StackPane {
 
     private final ContextMenu contextMenu;
-    private final MenuItem deleteItem;
-    private final MenuItem editItem;
+    private final MenuItem deleteItem, editItem;
 
     public NoteView(String title, String note) {
         super();

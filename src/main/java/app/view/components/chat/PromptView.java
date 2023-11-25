@@ -52,4 +52,12 @@ public class PromptView extends BorderPane {
         this.setCenter(prompt);
         this.setStyle("-fx-background-color: #353640;");
     }
+
+    public TextArea getPromptTextArea() {
+        return promptTextArea;
+    }
+
+    public Button getSendButton() {
+        return sendButton;
+    }
 }

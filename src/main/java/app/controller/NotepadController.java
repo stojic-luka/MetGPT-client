@@ -3,7 +3,7 @@ package app.controller;
 import app.controller.components.notepad.NoteDialogController;
 import app.model.notepad.Note;
 import app.model.notepad.NotesModel;
-import app.view.NotepadView;
+import app.view.NotepadTabView;
 import app.view.components.notepad.NoteView;
 import javafx.collections.ListChangeListener;
 import javafx.event.ActionEvent;
@@ -13,10 +13,10 @@ import javafx.scene.control.MenuItem;
 public class NotepadController {
 
     private final NotesModel notesModel;
-    private final NotepadView notepadView;
+    private final NotepadTabView notepadView;
     private final NoteDialogController noteDialogController;
 
-    public NotepadController(NotepadView notepadView) {
+    public NotepadController(NotepadTabView notepadView) {
         this.notesModel = new NotesModel();
         this.notepadView = notepadView;
 
@@ -64,13 +64,7 @@ public class NotepadController {
             }
             System.out.println(notesModel.getNotes());
         });
-
-        ///
-        ///
-        notesModel.addNote("test", "test note");
-
-        ///
-        ///
+        
         notepadView.getAddNoteButton().setOnAction(e -> noteDialogController.getAddDialog().showDialog());
 
 //        notepadView.getSearchTextField()

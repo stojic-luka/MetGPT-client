@@ -13,14 +13,14 @@ import javafx.scene.layout.Priority;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 
-public class NotepadView extends Tab {
+public class NotepadTabView extends Tab {
 
     private final VBox notesVBox;
 
     private final Button addNoteButton;
     private final TextField searchTextField;
-    
-    public NotepadView() {
+
+    public NotepadTabView() {
         super();
         this.setText("NotePad");
 
@@ -52,7 +52,7 @@ public class NotepadView extends Tab {
         HBox.setHgrow(searchTextField, Priority.ALWAYS);
 
         borderPane.setTop(topHBox);
-        
+
         this.setContent(borderPane);
     }
 

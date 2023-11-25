@@ -1,10 +1,13 @@
 package app.model.chat;
 
 import java.time.LocalDateTime;
+import javafx.scene.Node;
 
 public class Chat {
     private String title;
     private final LocalDateTime createdAt;
+    
+    private Node parent;
 
     public Chat(String title) {
         this.title = title;
@@ -21,6 +24,14 @@ public class Chat {
 
     public LocalDateTime getCreatedAt() {
         return createdAt;
+    }
+
+    public Node getParent() {
+        return parent;
+    }
+
+    public void setParent(Node parent) {
+        this.parent = parent;
     }
 
     @Override

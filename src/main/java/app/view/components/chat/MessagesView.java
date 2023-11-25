@@ -9,19 +9,20 @@ import javafx.scene.layout.VBox;
 
 public class MessagesView extends BorderPane {
 
-    private final VBox messages;
+    private final VBox messagesVBox;
+    private final PromptView promptView;
 
     public MessagesView() {
         super();
         
-        messages = new VBox();
-        messages.setSpacing(10);
-        messages.setPadding(new Insets(0, 0, 10, 0));
-        messages.setMaxHeight(0);
-        messages.setMaxWidth(600);
-        messages.setStyle("-fx-background-color: #444654;");
+        messagesVBox = new VBox();
+        messagesVBox.setSpacing(10);
+        messagesVBox.setPadding(new Insets(0, 0, 10, 0));
+        messagesVBox.setMaxHeight(0);
+        messagesVBox.setMaxWidth(600);
+        messagesVBox.setStyle("-fx-background-color: #444654;");
 
-        StackPane stack = new StackPane(messages);
+        StackPane stack = new StackPane(messagesVBox);
         stack.setAlignment(Pos.BOTTOM_CENTER);
         ScrollPane messagesScroll = new ScrollPane();
         messagesScroll.setId("messagesScroll");
@@ -29,10 +30,17 @@ public class MessagesView extends BorderPane {
         messagesScroll.setFitToWidth(true);
         messagesScroll.setFitToHeight(true);
 
-        this.setBottom(new PromptView());
+        promptView = new PromptView();
+        this.setBottom(promptView);
         this.setCenter(messagesScroll);
         this.setStyle("-fx-background-color: #444654;");
     }
-    
-    
+
+    public VBox getMessagesVBox() {
+        return messagesVBox;
+    }
+
+    public PromptView getPromptView() {
+        return promptView;
+    }
 }
