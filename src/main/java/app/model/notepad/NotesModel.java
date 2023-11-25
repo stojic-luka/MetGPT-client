@@ -24,4 +24,13 @@ public class NotesModel {
     public void addNote(Note note) {
         notes.add(note);
     }
+    
+    public void removeNote(Note note) {
+        notes.remove(note);
+    }
+
+    @Override
+    public String toString() {
+        return "NotesModel{" + "notes=" + notes + '}';
+    }
 }

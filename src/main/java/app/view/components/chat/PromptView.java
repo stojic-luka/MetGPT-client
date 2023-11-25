@@ -12,25 +12,28 @@ import javafx.scene.paint.Color;
 
 public class PromptView extends BorderPane {
 
+    private final TextArea promptTextArea;
+    private final Button sendButton;
+    
     public PromptView() {
         super();
         
-        TextArea textArea = new TextArea();
-        textArea.setId("textArea");
-        textArea.setWrapText(true);
-        textArea.setPromptText("Send a message");
-        textArea.setPrefSize(400, 50);
-        textArea.setMaxSize(400, 50);
-        textArea.setPadding(new Insets(2, 0, 0, 0));
-
-        Button sendButton = new Button();
+        promptTextArea = new TextArea();
+        promptTextArea.setId("textArea");
+        promptTextArea.setWrapText(true);
+        promptTextArea.setPromptText("Send a message");
+        promptTextArea.setPrefSize(400, 50);
+        promptTextArea.setMaxSize(400, 50);
+        promptTextArea.setPadding(new Insets(2, 0, 0, 0));
+        
+        sendButton = new Button();
         sendButton.setPrefSize(40, 40);
         sendButton.setMaxSize(40, 40);
         VBox sendButtonPane = new VBox(sendButton);
         sendButtonPane.setPrefSize(40, 40);
         sendButtonPane.setMaxSize(40, 40);
         VBox.setMargin(sendButton, new Insets(2, 0, 0, 0));
-
+        
         GridPane prompt = new GridPane();
         prompt.setId("prompt");
         prompt.setMaxSize(447, 54);
@@ -40,7 +43,7 @@ public class PromptView extends BorderPane {
                 10, 10, 0, 0);
         promptShadow.setSpread(0.5);
         prompt.setEffect(promptShadow);
-        prompt.add(textArea, 0, 0);
+        prompt.add(promptTextArea, 0, 0);
         prompt.add(sendButtonPane, 1, 0);
         BorderPane promptPane = new BorderPane();
         promptPane.setCenter(prompt);

@@ -1,9 +1,6 @@
 package app.view;
 
-import app.view.components.notepad.NoteView;
 import javafx.geometry.Insets;
-import javafx.scene.control.Alert;
-import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.Button;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.control.Tab;
@@ -18,56 +15,56 @@ import javafx.scene.paint.Color;
 
 public class NotepadView extends Tab {
 
-    private final VBox notesVBox = new VBox();
+    private final VBox notesVBox;
 
+    private final Button addNoteButton;
+    private final TextField searchTextField;
+    
     public NotepadView() {
+        super();
         this.setText("NotePad");
 
-        try {
-            //            loadNotes();
-        } catch (Exception e) {
-            Alert a = new Alert(AlertType.WARNING);
-            a.show();
-        }
-
-        BorderPane borderPane = new BorderPane();
+        notesVBox = new VBox();
         ScrollPane scrollPane = new ScrollPane(notesVBox);
         scrollPane.setFitToWidth(true);
         scrollPane.getStyleClass().add("notes");
         scrollPane.setPadding(new Insets(10));
+        BorderPane borderPane = new BorderPane();
         borderPane.setCenter(scrollPane);
         borderPane.setStyle("-fx-background-color: #353640;");
 
-        TextField searchBox = new TextField();
+        searchTextField = new TextField();
         DropShadow promptShadow = new DropShadow(
                 BlurType.GAUSSIAN,
                 Color.rgb(43, 44, 52),
                 10, 10, 0, 0);
         promptShadow.setSpread(0.5);
-        searchBox.setEffect(promptShadow);
-        searchBox.getStyleClass().add("text-field-custom");
+        searchTextField.setEffect(promptShadow);
+        searchTextField.getStyleClass().add("text-field-custom");
 
-        Button addNote = new Button("+");
-        addNote.setOnAction((e) -> {
-            addNoteDialog.show();
-        });
+        addNoteButton = new Button("+");
 
         HBox topHBox = new HBox(
-                searchBox,
-                addNote);
+                searchTextField,
+                addNoteButton);
         topHBox.setPadding(new Insets(7));
         topHBox.setSpacing(5);
-        HBox.setHgrow(searchBox, Priority.ALWAYS);
+        HBox.setHgrow(searchTextField, Priority.ALWAYS);
 
         borderPane.setTop(topHBox);
-
+        
         this.setContent(borderPane);
     }
 
-    private void addNote(String title, String note) {
-        notesVBox.getChildren().add(new NoteView(title, note));
+    public VBox getNotesVBox() {
+        return notesVBox;
     }
 
-    private void loadNotes() {
+    public Button getAddNoteButton() {
+        return addNoteButton;
+    }
+
+    public TextField getSearchTextField() {
+        return searchTextField;
     }
 }

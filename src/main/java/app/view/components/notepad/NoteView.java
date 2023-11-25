@@ -16,6 +16,7 @@ public class NoteView extends StackPane {
     private final MenuItem editItem;
 
     public NoteView(String title, String note) {
+        super();
         Label titleLabel = new Label(title);
         Label noteLabel = new Label(note);
 
@@ -34,11 +35,16 @@ public class NoteView extends StackPane {
                 20, 10, 0, 0);
         promptShadow.setSpread(0.4);
         vBox.setEffect(promptShadow);
-        vBox.setUserData(new NoteView(title, note));
-        vBox.setOnContextMenuRequested(e -> {
-            contextMenu.show(vBox, e.getScreenX(), e.getScreenY());
-        });
+        this.setOnContextMenuRequested(e -> contextMenu.show(vBox, e.getScreenX(), e.getScreenY()));
 
         this.getChildren().add(vBox);
+    }
+
+    public MenuItem getEditItem() {
+        return editItem;
+    }
+
+    public MenuItem getDeleteItem() {
+        return deleteItem;
     }
 }

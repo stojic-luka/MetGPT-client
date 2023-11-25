@@ -8,6 +8,7 @@ import javafx.scene.layout.AnchorPane;
 public class ChatView extends Tab {
 
     public ChatView() {
+        super();
         this.setText("ChatBot");
 
         MessagesView messagesView = new MessagesView();

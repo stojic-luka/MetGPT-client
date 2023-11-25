@@ -30,6 +30,11 @@ public class Note {
     public void setNote(String note) {
         this.note = note;
     }
+    
+    public void clear() {
+        this.title = "";
+        this.note = "";
+    }
 
     public boolean contains(String str) {
         return title.contains(str) || note.contains(str);

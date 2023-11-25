@@ -12,6 +12,8 @@ public class MessagesView extends BorderPane {
     private final VBox messages;
 
     public MessagesView() {
+        super();
+        
         messages = new VBox();
         messages.setSpacing(10);
         messages.setPadding(new Insets(0, 0, 10, 0));
@@ -31,4 +33,6 @@ public class MessagesView extends BorderPane {
         this.setCenter(messagesScroll);
         this.setStyle("-fx-background-color: #444654;");
     }
+    
+    
 }

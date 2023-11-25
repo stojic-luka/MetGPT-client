@@ -18,6 +18,7 @@ public class CalendarView extends Tab {
     private final Label dateLabel = new Label();
 
     public CalendarView() {
+        super();
         setText("Calendar");
 
         c = Calendar.getInstance();

@@ -11,24 +11,28 @@ import javafx.stage.Modality;
 import javafx.stage.Stage;
 
 public class NoteDialog extends Stage {
-    
-    private final TextField titleTextField = new TextField();
-    private final TextArea noteTextArea = new TextArea();
-    
+
+    private final TextField titleTextField;
+    private final TextArea noteTextArea;
+
     private final Button saveButton, cancelButton;
-    
+
     public NoteDialog() {
+        super();
         this.initModality(Modality.APPLICATION_MODAL);
         this.setResizable(false);
-        
+
+        titleTextField = new TextField();
+        noteTextArea = new TextArea();
+
         HBox titleHBox = new HBox(
                 new Label("Title:"),
                 titleTextField
         );
-        
+
         saveButton = new Button("Save");
         cancelButton = new Button("Cancel");
-        
+
         this.setScene(
                 new Scene(
                         new VBox(
@@ -39,30 +43,30 @@ public class NoteDialog extends Stage {
                         300, 200
                 )
         );
-        
+
         this.setOnCloseRequest(e -> closeDialog());
     }
-    
+
     public TextField getTitleTextField() {
         return titleTextField;
     }
-    
+
     public TextArea getNoteTextArea() {
         return noteTextArea;
     }
-    
+
     public Button getSaveButton() {
         return saveButton;
     }
-    
+
     public Button getCancelButton() {
         return cancelButton;
     }
-    
+
     public void showDialog() {
         this.show();
     }
-    
+
     public void closeDialog() {
         this.hide();
         titleTextField.clear();
