@@ -12,6 +12,7 @@ import javafx.scene.paint.Color;
 
 public class NoteView extends StackPane {
 
+    private final ContextMenu contextMenu;
     private final MenuItem deleteItem;
     private final MenuItem editItem;
 
@@ -20,7 +21,7 @@ public class NoteView extends StackPane {
         Label titleLabel = new Label(title);
         Label noteLabel = new Label(note);
 
-        ContextMenu contextMenu = new ContextMenu();
+        contextMenu = new ContextMenu();
         editItem = new MenuItem("Edit");
         deleteItem = new MenuItem("Delete");
         contextMenu.getItems().addAll(editItem, deleteItem);
@@ -38,6 +39,10 @@ public class NoteView extends StackPane {
         this.setOnContextMenuRequested(e -> contextMenu.show(vBox, e.getScreenX(), e.getScreenY()));
 
         this.getChildren().add(vBox);
+    }
+
+    public ContextMenu getContextMenu() {
+        return contextMenu;
     }
 
     public MenuItem getEditItem() {

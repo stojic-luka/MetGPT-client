@@ -1,18 +1,28 @@
 package app.model.notepad;
 
+import javafx.scene.Node;
+
 public class Note {
 
     private String title;
-    private String note;
+    private String content;
+
+    private Node parent;
 
     public Note() {
         title = "";
-        note = "";
+        content = "";
     }
-    
-    public Note(String title, String note) {
+
+    public Note(String title, String content) {
         this.title = title;
-        this.note = note;
+        this.content = content;
+    }
+
+    public Note(String title, String content, Node parent) {
+        this.title = title;
+        this.content = content;
+        this.parent = parent;
     }
 
     public String getTitle() {
@@ -23,25 +33,33 @@ public class Note {
         this.title = title;
     }
 
-    public String getNote() {
-        return note;
+    public String getContent() {
+        return content;
     }
 
-    public void setNote(String note) {
-        this.note = note;
+    public void setContent(String content) {
+        this.content = content;
     }
-    
+
+    public Node getParent() {
+        return parent;
+    }
+
+    public void setParent(Node parent) {
+        this.parent = parent;
+    }
+
     public void clear() {
         this.title = "";
-        this.note = "";
+        this.content = "";
     }
 
     public boolean contains(String str) {
-        return title.contains(str) || note.contains(str);
+        return title.contains(str) || content.contains(str);
     }
 
     @Override
     public String toString() {
-        return "Note{" + "title=" + title + ", note=" + note + '}';
+        return "Note{" + "title=" + title + ", content=" + content + '}';
     }
 }

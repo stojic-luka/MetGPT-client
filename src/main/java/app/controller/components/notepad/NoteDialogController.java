@@ -8,21 +8,22 @@ public class NoteDialogController {
 
     private Note note;
     private final NoteDialog dialog;
-//    private final NotesModel notesModel;
+    private final NotesModel notesModel;
 
     public NoteDialogController(NotesModel notesModel) {
         this.note = new Note();
         this.dialog = new NoteDialog();
-//        this.notesModel = notesModel;
+        this.notesModel = notesModel;
 
         dialog.getTitleTextField().textProperty().addListener((obs, oldVal, newVal) -> note.setTitle(newVal));
-        dialog.getNoteTextArea().textProperty().addListener((obs, oldVal, newVal) -> note.setNote(newVal));
+        dialog.getNoteTextArea().textProperty().addListener((obs, oldVal, newVal) -> note.setContent(newVal));
 
         dialog.getSaveButton().setOnAction(e -> {
             notesModel.addNote(note);
             dialog.closeDialog();
             note.clear();
         });
+
         dialog.getCancelButton().setOnAction(e -> {
             dialog.closeDialog();
             note.clear();
@@ -30,18 +31,32 @@ public class NoteDialogController {
     }
 
     public NoteDialog getEditDialog(Note note) {
-        return getEditDialog(note.getTitle(), note.getNote());
+        return getEditDialog(note.getTitle(), note.getContent());
     }
 
-    public NoteDialog getEditDialog(String title, String note) {
+    public NoteDialog getEditDialog(String title, String content) {
         dialog.setTitle("Edit note");
         dialog.getTitleTextField().setText(title);
-        dialog.getNoteTextArea().setText(note);
+        dialog.getNoteTextArea().setText(content);
+
+        dialog.getSaveButton().setOnAction(e -> {
+            notesModel.addNote(this.note);
+            dialog.closeDialog();
+            this.note.clear();
+        });
+
         return dialog;
     }
 
     public NoteDialog getAddDialog() {
         dialog.setTitle("Add note");
+
+        dialog.getSaveButton().setOnAction(e -> {
+            notesModel.addNote(note);
+            dialog.closeDialog();
+            note.clear();
+        });
+
         return dialog;
     }
 }
