@@ -3,13 +3,10 @@ package app.view.components.chat;
 import javafx.geometry.Insets;
 import javafx.scene.effect.BlurType;
 import javafx.scene.effect.DropShadow;
-import javafx.scene.image.Image;
-import javafx.scene.image.ImageView;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Text;
-import javafx.scene.text.TextFlow;
 
 public class BotMessage extends VBox {
 
@@ -18,18 +15,21 @@ public class BotMessage extends VBox {
     private final Text senderName;
     private final BorderPane messageBubble;
 
-    public BotMessage() {
+    public BotMessage(String msg) {
         super();
 
-        ImageView loadingImage = new ImageView();
-        loadingImage.setImage(new Image(getClass().getClassLoader().getResource("images/loading.gif").toExternalForm()));
+//        ImageView loadingImage = new ImageView();
+//        loadingImage.setImage(new Image(getClass().getClassLoader().getResource("images/loading.gif").toExternalForm()));
+//
+        Text txt = new Text(msg);
+        txt.setFill(botTextFill);
 
         senderName = new Text("MetChat Bot");
         senderName.setFill(botTextFill);
         senderName.getStyleClass().add("senderName");
 
         BorderPane message = new BorderPane();
-        message.setCenter(loadingImage);
+        message.setCenter(txt);
         message.setMaxWidth(540);
         message.setId("message");
         messageBubble = new BorderPane();
@@ -47,11 +47,11 @@ public class BotMessage extends VBox {
         this.setSpacing(5);
     }
 
-    public void setMessage(String msg) {
-        BorderPane message = (BorderPane) messageBubble.getLeft();
-
-        Text txt = new Text(msg);
-        txt.setFill(botTextFill);
-        message.setCenter(new TextFlow(txt));
-    }
+//    public void setMessage(String msg) {
+//        BorderPane message = (BorderPane) messageBubble.getLeft();
+//
+//        Text txt = new Text(msg);
+//        txt.setFill(botTextFill);
+//        message.setCenter(new TextFlow(txt));
+//    }
 }

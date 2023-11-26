@@ -16,6 +16,6 @@ public class JsonManager {
     }
     
     public static String mapToJson(Map obj) {
-        return gson.toJson(obj, JsonObject.class);
+        return gson.toJson(obj);
     }
 }

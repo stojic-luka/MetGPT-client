@@ -1,7 +1,6 @@
 package app.util;
 
 import com.google.gson.JsonObject;
-import java.io.IOException;
 import java.net.URI;
 import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
