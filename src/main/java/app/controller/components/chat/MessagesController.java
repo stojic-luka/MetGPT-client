@@ -22,10 +22,12 @@ public class MessagesController {
         this.promptView = messagesView.getPromptView();
 
         this.promptView.getSendButton().setOnAction(e -> {
-            String messageString = this.promptView.getPromptTextArea().getText();
+            String messageString = this.promptView.getPromptTextArea().getText().trim();
             if (messageString.isEmpty()) {
                 return;
             }
+
+            this.promptView.getPromptTextArea().clear();
 
             this.messagesModel.addMessage(messageString);
             NetworkManager.sendPostRequestAsync(
@@ -33,9 +35,10 @@ public class MessagesController {
                     Map.ofEntries(Map.entry("input", messageString)),
                     response -> {
                         String msg = response.get("message").getAsString();
+                        System.out.println(msg);
                         this.messagesModel.addMessage(msg, true);
+                        System.out.println(msg);
                     }
-            //                    response -> botMessage.setMessage(response.get("message").getAsString())
             );
         });
 
@@ -52,7 +55,7 @@ public class MessagesController {
                     }
                 }
             }
-//            System.out.println(chatsModel.getChats());
+            System.out.println(messagesModel.getMessages());
         });
     }
 }

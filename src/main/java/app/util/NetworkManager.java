@@ -37,7 +37,7 @@ public class NetworkManager {
                 .header("Content-Type", "application/json")
                 .POST(HttpRequest.BodyPublishers.ofString(JsonManager.mapToJson(objMessage)))
                 .build();
-
+        
         httpClient.sendAsync(request, HttpResponse.BodyHandlers.ofString())
                 .thenApply(response -> JsonManager.stringToJson(response.body()))
                 .thenAccept(callback);
