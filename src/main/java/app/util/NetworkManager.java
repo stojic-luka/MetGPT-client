@@ -6,6 +6,7 @@ import java.net.URI;
 import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
+import java.util.Map;
 import java.util.function.Consumer;
 
 public class NetworkManager {
@@ -29,13 +30,13 @@ public class NetworkManager {
 //        return new JsonObject();
 //    }
 
-    public static void sendPostRequestAsync(String urlString, JsonObject objMessage, Consumer<JsonObject> callback) {
+    public static void sendPostRequestAsync(String urlString, Map objMessage, Consumer<JsonObject> callback) {
         HttpClient httpClient = HttpClient.newHttpClient();
 
         HttpRequest request = HttpRequest.newBuilder()
                 .uri(URI.create(urlString))
                 .header("Content-Type", "application/json")
-                .POST(HttpRequest.BodyPublishers.ofString(JsonManager.jsonToString(objMessage)))
+                .POST(HttpRequest.BodyPublishers.ofString(JsonManager.mapToJson(objMessage)))
                 .build();
 
         httpClient.sendAsync(request, HttpResponse.BodyHandlers.ofString())

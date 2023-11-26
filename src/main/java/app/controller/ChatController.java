@@ -18,7 +18,7 @@ public class ChatController {
         this.chatsModel = new ChatsModel();
         this.messagesModel = new MessagesModel();
         this.chatTabView = chatTabView;
-        this.sidePaneController = new SidePaneController(chatTabView.getSidePaneView(), chatsModel);
         this.messagesController = new MessagesController(chatTabView.getMessagesView(), messagesModel);
+        this.sidePaneController = new SidePaneController(chatTabView.getSidePaneView(), chatsModel, messagesController);
     }
 }

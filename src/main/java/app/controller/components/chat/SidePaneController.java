@@ -13,10 +13,12 @@ public class SidePaneController {
 
     private final ChatsModel chatsModel;
     private final SidePaneView sidePaneView;
+    private final MessagesController messagesController;
 
-    public SidePaneController(SidePaneView sidePaneView, ChatsModel chatsModel) {
+    public SidePaneController(SidePaneView sidePaneView, ChatsModel chatsModel, MessagesController messagesController) {
         this.chatsModel = chatsModel;
         this.sidePaneView = sidePaneView;
+        this.messagesController = messagesController;
 
         final EventHandler<ActionEvent> renameLambda = e -> {
             MenuItem menuItem = (MenuItem) e.getSource();
@@ -54,7 +56,7 @@ public class SidePaneController {
         });
 
         sidePaneView.getAddChatButton().setOnAction(e -> {
-            chatsModel.addChat("chat test");
+            chatsModel.addChat("add chat test");
         });
 
     }

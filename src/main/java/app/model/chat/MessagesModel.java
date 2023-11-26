@@ -17,6 +17,10 @@ public class MessagesModel {
         return messagesProperty;
     }
 
+    public void addMessage(String content) {
+        addMessage(content, false);
+    }
+
     public void addMessage(String content, boolean senderBot) {
         messages.add(new Message(content, senderBot));
     }
