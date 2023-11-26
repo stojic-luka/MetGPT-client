@@ -36,6 +36,7 @@ public class MessagesController {
                     response -> {
                         String msg = response.get("message").getAsString();
                         System.out.println(msg);
+                        // fix sending message from main thread
                         this.messagesModel.addMessage(msg, true);
                         System.out.println(msg);
                     }
