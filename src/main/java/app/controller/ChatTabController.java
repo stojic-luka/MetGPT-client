@@ -25,12 +25,10 @@ public class ChatTabController {
         this.chatTabView = chatTabView;
         this.messagesController = new MessagesController(chatTabView.getMessagesView(), messagesModel);
         this.sidePaneController = new SidePaneController(chatTabView.getSidePaneView(), chatsModel, currentChatId);
-
         
         currentChatId.addListener((observable, oldValue, newValue) -> {
             messagesController.clearMessages();
             messagesController.loadMessages(newValue.longValue());
-            System.out.println(newValue.longValue());
         });
     }
 }

@@ -2,12 +2,15 @@ package app.controller.components.chat;
 
 import app.model.chat.Message;
 import app.model.chat.MessagesModel;
-import app.util.JsonManager;
 import app.util.NetworkManager;
 import app.view.components.chat.BotMessageView;
 import app.view.components.chat.UserMessageView;
 import app.view.components.chat.MessagesView;
 import app.view.components.chat.PromptView;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.Map;
 import javafx.application.Platform;
 import javafx.collections.ListChangeListener;
@@ -79,8 +82,18 @@ public class MessagesController {
         NetworkManager.sendGetRequestAsync(
                 String.format("http://127.0.0.1:8080/api/v1/chats/%d/messages", chatId),
                 response -> {
-                    Message[] messages = JsonManager.getGson().fromJson(response, Message[].class);
-                    Platform.runLater(() -> this.messagesModel.addMessages(messages));
+                    for (JsonElement responseJsonElement : response.get("messages").getAsJsonArray()) {
+                        JsonObject responseJsonObject = responseJsonElement.getAsJsonObject();
+                        String createdAtString = responseJsonObject.getAsJsonPrimitive("createdAt").getAsString();
+                        
+                        Message chat = new Message(
+                                responseJsonObject.get("content").getAsString(),
+                                responseJsonObject.get("senderBot").getAsBoolean(),
+                                LocalDateTime.parse(createdAtString, DateTimeFormatter.ISO_DATE_TIME)
+                        );
+                        
+                        Platform.runLater(() -> messagesModel.addMessage(chat));
+                    }
                 }
         );
     }

@@ -4,7 +4,7 @@ import java.time.LocalDateTime;
 import javafx.scene.Node;
 
 public class Chat {
-    private long chatId;
+    private final long chatId;
     private String title;
     private final LocalDateTime createdAt;
     

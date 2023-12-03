@@ -25,6 +25,10 @@ public class ChatsModel {
         chats.add(chat);
     }
 
+    public void addChat(Chat[] chatArr) {
+        chats.addAll(chatArr);
+    }
+
     public void removeChat(Chat chat) {
         if (chats.contains(chat)) {
             chats.remove(chat);

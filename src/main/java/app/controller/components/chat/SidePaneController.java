@@ -2,12 +2,15 @@ package app.controller.components.chat;
 
 import app.model.chat.Chat;
 import app.model.chat.ChatsModel;
-import app.util.JsonManager;
 import app.util.NetworkManager;
 import app.view.components.chat.ChatView;
 import app.view.components.chat.SidePaneView;
 import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.Random;
+import javafx.application.Platform;
 import javafx.beans.property.SimpleLongProperty;
 import javafx.collections.ListChangeListener;
 import javafx.event.ActionEvent;
@@ -30,12 +33,11 @@ public class SidePaneController {
 
         final EventHandler<MouseEvent> changeChat = e -> {
             ChatView chatView = (ChatView) e.getSource();
-            System.out.println(chatView);
             Chat chat = (Chat) chatView.getContextMenu().getUserData();
-            System.out.println(chat);
-            
-            if (chat.getChatId() != currentChatId.get())
+
+            if (chat.getChatId() != currentChatId.get()) {
                 currentChatId.set(chat.getChatId());
+            }
         };
 
         final EventHandler<KeyEvent> sendOnEnter = e -> {
@@ -81,25 +83,30 @@ public class SidePaneController {
                     }
                 }
             }
-            System.out.println(chatsModel.getChats());
         });
-        
+
         sidePaneView.getAddChatButton().setOnAction(e -> {
             chatsModel.addChat(new Random().nextInt(100) + 1, "add chat test");
         });
-        
+
         loadChats();
     }
 
     private void loadChats() {
-        System.out.println("load chats");
         NetworkManager.sendGetRequestAsync(
                 "http://127.0.0.1:8080/api/v1/chats",
                 response -> {
-                    System.out.println(response);
-                    for (JsonElement jsonElement : response.getAsJsonArray()) {
-                        Chat chat = JsonManager.getGson().fromJson(jsonElement, Chat.class);
-                        chatsModel.addChat(chat);
+                    for (JsonElement responseJsonElement : response.get("chats").getAsJsonArray()) {
+                        JsonObject responseJsonObject = responseJsonElement.getAsJsonObject();
+                        String createdAtString = responseJsonObject.getAsJsonPrimitive("createdAt").getAsString();
+                        
+                        Chat chat = new Chat(
+                                responseJsonObject.get("chatId").getAsLong(),
+                                responseJsonObject.get("title").getAsString(),
+                                LocalDateTime.parse(createdAtString, DateTimeFormatter.ISO_DATE_TIME)
+                        );
+                        
+                        Platform.runLater(() -> chatsModel.addChat(chat));
                     }
                 }
         );

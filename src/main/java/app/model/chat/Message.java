@@ -14,6 +14,12 @@ public class Message {
         this.createdAt = LocalDateTime.now();
     }
 
+    public Message(String content, boolean senderBot, LocalDateTime createdAt) {
+        this.content = content;
+        this.senderBot = senderBot;
+        this.createdAt = createdAt;
+    }
+
     public String getContent() {
         return content;
     }

@@ -7,6 +7,8 @@ import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
 import java.time.Duration;
 import java.util.Map;
+import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.ExecutionException;
 import java.util.function.Consumer;
 
 public class NetworkManager {
@@ -21,9 +23,16 @@ public class NetworkManager {
                 .GET()
                 .build();
 
-        httpClient.sendAsync(request, HttpResponse.BodyHandlers.ofString())
-                .thenApply(response -> JsonManager.stringToJson(response.body()))
-                .thenAccept(callback);
+//        httpClient.sendAsync(request, HttpResponse.BodyHandlers.ofString())
+//                .thenApply(response -> JsonManager.stringToJson(response.body()))
+//                .thenAccept(callback);
+        CompletableFuture<HttpResponse<String>> requestFuture = httpClient.sendAsync(request, HttpResponse.BodyHandlers.ofString());
+        CompletableFuture<JsonObject> requestFutureString = requestFuture.thenApply(response -> JsonManager.stringToJson(response.body()));
+        try {
+            callback.accept(requestFutureString.get());
+        } catch (InterruptedException | ExecutionException e) {
+            e.printStackTrace();
+        }
     }
 
     public static void sendPostRequestAsync(String urlString, Map objMessage, Consumer<JsonObject> callback) {
@@ -36,8 +45,15 @@ public class NetworkManager {
                 .POST(HttpRequest.BodyPublishers.ofString(JsonManager.mapToJson(objMessage)))
                 .build();
 
-        httpClient.sendAsync(request, HttpResponse.BodyHandlers.ofString())
-                .thenApply(response -> JsonManager.stringToJson(response.body()))
-                .thenAccept(callback);
+//        httpClient.sendAsync(request, HttpResponse.BodyHandlers.ofString())
+//                .thenApply(response -> JsonManager.stringToJson(response.body()))
+//                .thenAccept(callback);
+        CompletableFuture<HttpResponse<String>> requestFuture = httpClient.sendAsync(request, HttpResponse.BodyHandlers.ofString());
+        CompletableFuture<JsonObject> requestFutureString = requestFuture.thenApply(response -> JsonManager.stringToJson(response.body()));
+        try {
+            callback.accept(requestFutureString.get());
+        } catch (InterruptedException | ExecutionException e) {
+            e.printStackTrace();
+        }
     }
 }
