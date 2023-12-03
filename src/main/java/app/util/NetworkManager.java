@@ -56,4 +56,48 @@ public class NetworkManager {
             e.printStackTrace();
         }
     }
+
+    public static void sendPutRequestAsync(String urlString, Map objMessage, Consumer<JsonObject> callback) {
+        HttpClient httpClient = HttpClient.newHttpClient();
+
+        HttpRequest request = HttpRequest.newBuilder()
+                .uri(URI.create(urlString))
+                .timeout(Duration.ofSeconds(10))
+                .header("Content-Type", "application/json")
+                .PUT(HttpRequest.BodyPublishers.ofString(JsonManager.mapToJson(objMessage)))
+                .build();
+
+//        httpClient.sendAsync(request, HttpResponse.BodyHandlers.ofString())
+//                .thenApply(response -> JsonManager.stringToJson(response.body()))
+//                .thenAccept(callback);
+        CompletableFuture<HttpResponse<String>> requestFuture = httpClient.sendAsync(request, HttpResponse.BodyHandlers.ofString());
+        CompletableFuture<JsonObject> requestFutureString = requestFuture.thenApply(response -> JsonManager.stringToJson(response.body()));
+        try {
+            callback.accept(requestFutureString.get());
+        } catch (InterruptedException | ExecutionException e) {
+            e.printStackTrace();
+        }
+    }
+    
+    public static void sendDeleteRequestAsync(String urlString, Consumer<JsonObject> callback) {
+        HttpClient httpClient = HttpClient.newHttpClient();
+
+        HttpRequest request = HttpRequest.newBuilder()
+                .uri(URI.create(urlString))
+                .timeout(Duration.ofSeconds(10))
+                .header("Content-Type", "application/json")
+                .DELETE()
+                .build();
+
+//        httpClient.sendAsync(request, HttpResponse.BodyHandlers.ofString())
+//                .thenApply(response -> JsonManager.stringToJson(response.body()))
+//                .thenAccept(callback);
+        CompletableFuture<HttpResponse<String>> requestFuture = httpClient.sendAsync(request, HttpResponse.BodyHandlers.ofString());
+        CompletableFuture<JsonObject> requestFutureString = requestFuture.thenApply(response -> JsonManager.stringToJson(response.body()));
+        try {
+            callback.accept(requestFutureString.get());
+        } catch (InterruptedException | ExecutionException e) {
+            e.printStackTrace();
+        }
+    }
 }

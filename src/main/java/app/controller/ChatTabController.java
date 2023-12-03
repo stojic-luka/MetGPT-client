@@ -26,9 +26,6 @@ public class ChatTabController {
         this.messagesController = new MessagesController(chatTabView.getMessagesView(), messagesModel);
         this.sidePaneController = new SidePaneController(chatTabView.getSidePaneView(), chatsModel, currentChatId);
         
-        currentChatId.addListener((observable, oldValue, newValue) -> {
-            messagesController.clearMessages();
-            messagesController.loadMessages(newValue.longValue());
-        });
+        currentChatId.addListener((observable, oldValue, newValue) -> messagesController.clearAndLoadMessages(newValue.longValue()));
     }
 }

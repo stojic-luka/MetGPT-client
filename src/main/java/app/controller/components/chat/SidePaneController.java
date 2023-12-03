@@ -96,7 +96,7 @@ public class SidePaneController {
         NetworkManager.sendGetRequestAsync(
                 "http://127.0.0.1:8080/api/v1/chats",
                 response -> {
-                    for (JsonElement responseJsonElement : response.get("chats").getAsJsonArray()) {
+                    for (JsonElement responseJsonElement : response.getAsJsonArray("chats")) {
                         JsonObject responseJsonObject = responseJsonElement.getAsJsonObject();
                         String createdAtString = responseJsonObject.getAsJsonPrimitive("createdAt").getAsString();
                         

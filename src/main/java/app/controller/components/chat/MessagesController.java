@@ -54,7 +54,6 @@ public class MessagesController {
                         }
                     }
                 }
-
             }
         });
     }
@@ -78,11 +77,16 @@ public class MessagesController {
         );
     }
 
-    public void loadMessages(long chatId) {
+    public void clearAndLoadMessages(long chatId) {
+        this.clearMessages();
+        this.loadMessages(chatId);
+    }
+    
+    private void loadMessages(long chatId) {
         NetworkManager.sendGetRequestAsync(
                 String.format("http://127.0.0.1:8080/api/v1/chats/%d/messages", chatId),
                 response -> {
-                    for (JsonElement responseJsonElement : response.get("messages").getAsJsonArray()) {
+                    for (JsonElement responseJsonElement : response.getAsJsonArray("messages")) {
                         JsonObject responseJsonObject = responseJsonElement.getAsJsonObject();
                         String createdAtString = responseJsonObject.getAsJsonPrimitive("createdAt").getAsString();
                         
@@ -98,7 +102,7 @@ public class MessagesController {
         );
     }
 
-    public void clearMessages() {
+    private void clearMessages() {
         messagesModel.getMessages().clear();
         messagesView.getMessagesVBox().getChildren().clear();
     }
