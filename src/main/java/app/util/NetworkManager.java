@@ -57,7 +57,23 @@ public class NetworkManager {
         }
     }
 
-    public static void sendPutRequestAsync(String urlString, Map objMessage, Consumer<JsonObject> callback) {
+    public static void sendPostRequestAsync(String urlString, Map objMessage) {
+        HttpClient httpClient = HttpClient.newHttpClient();
+
+        HttpRequest request = HttpRequest.newBuilder()
+                .uri(URI.create(urlString))
+                .timeout(Duration.ofSeconds(10))
+                .header("Content-Type", "application/json")
+                .POST(HttpRequest.BodyPublishers.ofString(JsonManager.mapToJson(objMessage)))
+                .build();
+
+//        httpClient.sendAsync(request, HttpResponse.BodyHandlers.ofString())
+//                .thenApply(response -> JsonManager.stringToJson(response.body()))
+//                .thenAccept(callback);
+        httpClient.sendAsync(request, HttpResponse.BodyHandlers.ofString());
+    }
+
+    public static void sendPutRequestAsync(String urlString, Map objMessage) {
         HttpClient httpClient = HttpClient.newHttpClient();
 
         HttpRequest request = HttpRequest.newBuilder()
@@ -70,16 +86,10 @@ public class NetworkManager {
 //        httpClient.sendAsync(request, HttpResponse.BodyHandlers.ofString())
 //                .thenApply(response -> JsonManager.stringToJson(response.body()))
 //                .thenAccept(callback);
-        CompletableFuture<HttpResponse<String>> requestFuture = httpClient.sendAsync(request, HttpResponse.BodyHandlers.ofString());
-        CompletableFuture<JsonObject> requestFutureString = requestFuture.thenApply(response -> JsonManager.stringToJson(response.body()));
-        try {
-            callback.accept(requestFutureString.get());
-        } catch (InterruptedException | ExecutionException e) {
-            e.printStackTrace();
-        }
+        httpClient.sendAsync(request, HttpResponse.BodyHandlers.ofString());
     }
-    
-    public static void sendDeleteRequestAsync(String urlString, Consumer<JsonObject> callback) {
+
+    public static void sendDeleteRequestAsync(String urlString) {
         HttpClient httpClient = HttpClient.newHttpClient();
 
         HttpRequest request = HttpRequest.newBuilder()
@@ -92,12 +102,6 @@ public class NetworkManager {
 //        httpClient.sendAsync(request, HttpResponse.BodyHandlers.ofString())
 //                .thenApply(response -> JsonManager.stringToJson(response.body()))
 //                .thenAccept(callback);
-        CompletableFuture<HttpResponse<String>> requestFuture = httpClient.sendAsync(request, HttpResponse.BodyHandlers.ofString());
-        CompletableFuture<JsonObject> requestFutureString = requestFuture.thenApply(response -> JsonManager.stringToJson(response.body()));
-        try {
-            callback.accept(requestFutureString.get());
-        } catch (InterruptedException | ExecutionException e) {
-            e.printStackTrace();
-        }
+        httpClient.sendAsync(request, HttpResponse.BodyHandlers.ofString());
     }
 }

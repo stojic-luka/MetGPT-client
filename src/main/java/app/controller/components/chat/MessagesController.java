@@ -13,6 +13,7 @@ import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.Map;
 import javafx.application.Platform;
+import javafx.beans.property.SimpleLongProperty;
 import javafx.collections.ListChangeListener;
 import javafx.scene.control.TextArea;
 import javafx.scene.input.KeyCode;
@@ -22,8 +23,12 @@ public class MessagesController {
     private final MessagesModel messagesModel;
     private final MessagesView messagesView;
     private final PromptView promptView;
+    
+    private final SimpleLongProperty currentChatId;
 
-    public MessagesController(MessagesView messagesView, MessagesModel messagesModel) {
+    public MessagesController(MessagesView messagesView, MessagesModel messagesModel, SimpleLongProperty currentChatId) {
+        this.currentChatId = currentChatId;
+        
         this.messagesModel = messagesModel;
         this.messagesView = messagesView;
         this.promptView = messagesView.getPromptView();
@@ -68,9 +73,10 @@ public class MessagesController {
 
         this.messagesModel.addMessage(messageString);
         NetworkManager.sendPostRequestAsync(
-                "http://127.0.0.1:8080/api/v1/chat",
+                String.format("http://127.0.0.1:8080/api/v1/chats/%s/chat", String.valueOf(this.currentChatId.get())),
                 Map.ofEntries(Map.entry("input", messageString)),
                 response -> {
+                    System.out.println(response);
                     String msg = response.get("response").getAsString();
                     Platform.runLater(() -> this.messagesModel.addMessage(msg, true));
                 }
@@ -81,21 +87,22 @@ public class MessagesController {
         this.clearMessages();
         this.loadMessages(chatId);
     }
-    
+
     private void loadMessages(long chatId) {
         NetworkManager.sendGetRequestAsync(
                 String.format("http://127.0.0.1:8080/api/v1/chats/%d/messages", chatId),
                 response -> {
                     for (JsonElement responseJsonElement : response.getAsJsonArray("messages")) {
                         JsonObject responseJsonObject = responseJsonElement.getAsJsonObject();
+                        System.out.println(responseJsonObject);
                         String createdAtString = responseJsonObject.getAsJsonPrimitive("createdAt").getAsString();
-                        
+
                         Message chat = new Message(
                                 responseJsonObject.get("content").getAsString(),
                                 responseJsonObject.get("senderBot").getAsBoolean(),
                                 LocalDateTime.parse(createdAtString, DateTimeFormatter.ISO_DATE_TIME)
                         );
-                        
+
                         Platform.runLater(() -> messagesModel.addMessage(chat));
                     }
                 }

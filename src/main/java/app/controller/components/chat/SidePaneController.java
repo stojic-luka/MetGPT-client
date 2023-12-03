@@ -9,6 +9,7 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.Map;
 import java.util.Random;
 import javafx.application.Platform;
 import javafx.beans.property.SimpleLongProperty;
@@ -16,6 +17,7 @@ import javafx.collections.ListChangeListener;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.scene.control.MenuItem;
+import javafx.scene.control.TextField;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseEvent;
@@ -41,11 +43,15 @@ public class SidePaneController {
         };
 
         final EventHandler<KeyEvent> sendOnEnter = e -> {
-            ChatView chatView = (ChatView) e.getSource();
-            Chat chat = (Chat) chatView.getUserData();
             if (e.getCode() == KeyCode.ENTER) {
+                ChatView chatView = (ChatView) ((TextField) e.getSource()).getParent();
+                Chat chat = (Chat) chatView.getContextMenu().getUserData();
+
                 chat.setTitle(chatView.getRenameChatField().getText());
-                ((ChatView) chat.getParent()).getChatTitle().setText(chat.getTitle());
+                NetworkManager.sendPutRequestAsync(
+                        String.format("http://127.0.0.1:8080/api/v1/chats/%d", chat.getChatId()),
+                        Map.ofEntries(Map.entry("title", chatView.getRenameChatField().getText()))
+                );
                 chatView.toggleRename();
             }
         };
@@ -73,20 +79,35 @@ public class SidePaneController {
                         chatView.getRenameChatField().setOnKeyPressed(sendOnEnter);
                         chatView.getDeleteItem().setOnAction(deleteLambda);
                         chatView.getContextMenu().setUserData(chat);
+                        chatView.getChatTitle().textProperty().bind(chat.titleProperty());
                         chat.setParent(chatView);
 
                         sidePaneView.getChatsVBox().getChildren().add(chatView);
                     }
                 } else if (change.wasRemoved()) {
                     for (Chat chat : change.getRemoved()) {
+                        NetworkManager.sendDeleteRequestAsync(
+                                String.format("http://127.0.0.1:8080/api/v1/chats/%d", chat.getChatId())
+                        );
+
                         sidePaneView.getChatsVBox().getChildren().remove(chat.getParent());
+                    }
+                } else if (change.wasUpdated()) {
+                    for (int i = change.getFrom(); i <= change.getTo(); i++) {
+                        Chat updatedChat = chatsModel.getChats().get(i);
+                        System.out.println("Updated chat: " + updatedChat.getTitle());
                     }
                 }
             }
         });
 
         sidePaneView.getAddChatButton().setOnAction(e -> {
-            chatsModel.addChat(new Random().nextInt(100) + 1, "add chat test");
+            NetworkManager.sendPostRequestAsync(
+                    "http://127.0.0.1:8080/api/v1/chats",
+                    Map.ofEntries(Map.entry("title", "New chat"))
+            );
+
+            chatsModel.addChat(new Random().nextInt(100) + 1, "New chat");
         });
 
         loadChats();
@@ -99,13 +120,13 @@ public class SidePaneController {
                     for (JsonElement responseJsonElement : response.getAsJsonArray("chats")) {
                         JsonObject responseJsonObject = responseJsonElement.getAsJsonObject();
                         String createdAtString = responseJsonObject.getAsJsonPrimitive("createdAt").getAsString();
-                        
+
                         Chat chat = new Chat(
                                 responseJsonObject.get("chatId").getAsLong(),
                                 responseJsonObject.get("title").getAsString(),
                                 LocalDateTime.parse(createdAtString, DateTimeFormatter.ISO_DATE_TIME)
                         );
-                        
+
                         Platform.runLater(() -> chatsModel.addChat(chat));
                     }
                 }

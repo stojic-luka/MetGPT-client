@@ -1,25 +1,32 @@
 package app.model.chat;
 
 import java.time.LocalDateTime;
+import javafx.beans.property.SimpleStringProperty;
+import javafx.beans.property.StringProperty;
 import javafx.scene.Node;
 
 public class Chat {
+
     private final long chatId;
-    private String title;
+    private final StringProperty title;
     private final LocalDateTime createdAt;
-    
+
     private Node parent;
 
     public Chat(long chatId, String title) {
         this.chatId = chatId;
-        this.title = title;
+        this.title = new SimpleStringProperty(title);
         this.createdAt = LocalDateTime.now();
     }
 
     public Chat(long chatId, String title, LocalDateTime createdAt) {
         this.chatId = chatId;
-        this.title = title;
+        this.title = new SimpleStringProperty(title);
         this.createdAt = createdAt;
+    }
+
+    public StringProperty titleProperty() {
+        return title;
     }
 
     public long getChatId() {
@@ -27,11 +34,11 @@ public class Chat {
     }
 
     public String getTitle() {
-        return title;
+        return title.get();
     }
 
     public void setTitle(String title) {
-        this.title = title;
+        this.title.set(title);
     }
 
     public LocalDateTime getCreatedAt() {
