@@ -2,13 +2,17 @@ package app.controller.components.chat;
 
 import app.model.chat.Message;
 import app.model.chat.MessagesModel;
+import app.util.JsonManager;
 import app.util.NetworkManager;
-import app.view.components.chat.BotMessage;
-import app.view.components.chat.UserMessage;
+import app.view.components.chat.BotMessageView;
+import app.view.components.chat.UserMessageView;
 import app.view.components.chat.MessagesView;
 import app.view.components.chat.PromptView;
 import java.util.Map;
+import javafx.application.Platform;
 import javafx.collections.ListChangeListener;
+import javafx.scene.control.TextArea;
+import javafx.scene.input.KeyCode;
 
 public class MessagesController {
 
@@ -21,42 +25,68 @@ public class MessagesController {
         this.messagesView = messagesView;
         this.promptView = messagesView.getPromptView();
 
-        this.promptView.getSendButton().setOnAction(e -> {
-            String messageString = this.promptView.getPromptTextArea().getText().trim();
-            if (messageString.isEmpty()) {
-                return;
+        this.promptView.getPromptTextArea().setOnKeyPressed(e -> {
+            TextArea textArea = (TextArea) e.getSource();
+            if (e.getCode() == KeyCode.ENTER && !e.isShiftDown()) {
+                e.consume();
+                processMessage();
+            } else if (e.getCode() == KeyCode.ENTER && e.isShiftDown()) {
+                textArea.appendText("\n");
             }
 
-            this.promptView.getPromptTextArea().clear();
-
-            this.messagesModel.addMessage(messageString);
-            NetworkManager.sendPostRequestAsync(
-                    "http://127.0.0.1:8080/api/v1/chat",
-                    Map.ofEntries(Map.entry("input", messageString)),
-                    response -> {
-                        String msg = response.get("message").getAsString();
-                        System.out.println(msg);
-                        // fix sending message from main thread
-                        this.messagesModel.addMessage(msg, true);
-                        System.out.println(msg);
-                    }
-            );
+            if (textArea.getText().length() > 200) {
+                textArea.setText(textArea.getText().substring(0, 200));
+            }
         });
+        this.promptView.getSendButton().setOnAction(e -> processMessage());
 
         this.messagesModel.getMessages().addListener((ListChangeListener<Message>) change -> {
             while (change.next()) {
                 if (change.wasAdded()) {
-                    System.out.println("added");
                     for (Message message : change.getAddedSubList()) {
                         if (!message.isSenderBot()) {
-                            messagesView.getMessagesVBox().getChildren().add(new UserMessage(message.getContent()));
+                            messagesView.getMessagesVBox().getChildren().add(new UserMessageView(message.getContent()));
                         } else {
-                            messagesView.getMessagesVBox().getChildren().add(new BotMessage(message.getContent()));
+                            messagesView.getMessagesVBox().getChildren().add(new BotMessageView(message.getContent()));
                         }
                     }
                 }
+
             }
-            System.out.println(messagesModel.getMessages());
         });
+    }
+
+    private void processMessage() {
+        String messageString = this.promptView.getPromptTextArea().getText().trim();
+        if (messageString.isEmpty()) {
+            return;
+        }
+
+        this.promptView.getPromptTextArea().clear();
+
+        this.messagesModel.addMessage(messageString);
+        NetworkManager.sendPostRequestAsync(
+                "http://127.0.0.1:8080/api/v1/chat",
+                Map.ofEntries(Map.entry("input", messageString)),
+                response -> {
+                    String msg = response.get("response").getAsString();
+                    Platform.runLater(() -> this.messagesModel.addMessage(msg, true));
+                }
+        );
+    }
+
+    public void loadMessages(long chatId) {
+        NetworkManager.sendGetRequestAsync(
+                String.format("http://127.0.0.1:8080/api/v1/chats/%d/messages", chatId),
+                response -> {
+                    Message[] messages = JsonManager.getGson().fromJson(response, Message[].class);
+                    Platform.runLater(() -> this.messagesModel.addMessages(messages));
+                }
+        );
+    }
+
+    public void clearMessages() {
+        messagesModel.getMessages().clear();
+        messagesView.getMessagesVBox().getChildren().clear();
     }
 }

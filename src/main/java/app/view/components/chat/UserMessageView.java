@@ -8,24 +8,21 @@ import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Text;
 
-public class BotMessage extends VBox {
+public class UserMessageView extends VBox {
 
-    private final Color botTextFill = Color.rgb(209, 213, 219);
+    private final Color userTextFill = Color.rgb(236, 236, 241);
 
     private final Text senderName;
     private final BorderPane messageBubble;
 
-    public BotMessage(String msg) {
+    public UserMessageView(String msg) {
         super();
 
-//        ImageView loadingImage = new ImageView();
-//        loadingImage.setImage(new Image(getClass().getClassLoader().getResource("images/loading.gif").toExternalForm()));
-//
         Text txt = new Text(msg);
-        txt.setFill(botTextFill);
+        txt.setFill(userTextFill);
 
-        senderName = new Text("MetChat Bot");
-        senderName.setFill(botTextFill);
+        senderName = new Text("You");
+        senderName.setFill(userTextFill);
         senderName.getStyleClass().add("senderName");
 
         BorderPane message = new BorderPane();
@@ -40,18 +37,10 @@ public class BotMessage extends VBox {
                 20, 10, 0, 0);
         promptShadow.setSpread(0.4);
         messageBubble.setEffect(promptShadow);
-        messageBubble.setLeft(message);
-        messageBubble.getStyleClass().add("bot-message-bubble");
+        messageBubble.setRight(message);
+        messageBubble.getStyleClass().add("message-bubble");
 
         this.getChildren().addAll(senderName, messageBubble);
         this.setSpacing(5);
     }
-
-//    public void setMessage(String msg) {
-//        BorderPane message = (BorderPane) messageBubble.getLeft();
-//
-//        Text txt = new Text(msg);
-//        txt.setFill(botTextFill);
-//        message.setCenter(new TextFlow(txt));
-//    }
 }

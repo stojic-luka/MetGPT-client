@@ -5,20 +5,32 @@ import app.controller.components.chat.SidePaneController;
 import app.model.chat.ChatsModel;
 import app.model.chat.MessagesModel;
 import app.view.ChatTabView;
+import javafx.beans.property.SimpleLongProperty;
 
-public class ChatController {
+public class ChatTabController {
 
     private final ChatsModel chatsModel;
     private final MessagesModel messagesModel;
     private final ChatTabView chatTabView;
     private final SidePaneController sidePaneController;
     private final MessagesController messagesController;
-    
-    public ChatController(ChatTabView chatTabView) {
+
+    private final SimpleLongProperty currentChatId;
+
+    public ChatTabController(ChatTabView chatTabView) {
+        this.currentChatId = new SimpleLongProperty();
+        
         this.chatsModel = new ChatsModel();
         this.messagesModel = new MessagesModel();
         this.chatTabView = chatTabView;
         this.messagesController = new MessagesController(chatTabView.getMessagesView(), messagesModel);
-        this.sidePaneController = new SidePaneController(chatTabView.getSidePaneView(), chatsModel, messagesController);
+        this.sidePaneController = new SidePaneController(chatTabView.getSidePaneView(), chatsModel, currentChatId);
+
+        
+        currentChatId.addListener((observable, oldValue, newValue) -> {
+            messagesController.clearMessages();
+            messagesController.loadMessages(newValue.longValue());
+            System.out.println(newValue.longValue());
+        });
     }
 }

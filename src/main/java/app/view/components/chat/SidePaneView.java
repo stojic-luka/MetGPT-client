@@ -61,7 +61,7 @@ public class SidePaneView extends HBox {
             isSidePanelShowing = !isSidePanelShowing;
         });
     }
-
+    
     public VBox getChatsVBox() {
         return chatsVBox;
     }

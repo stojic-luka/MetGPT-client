@@ -5,7 +5,7 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 
 public class MessagesModel {
-    
+
     private final ObservableList<Message> messages = FXCollections.observableArrayList();
     private final SimpleListProperty<Message> messagesProperty = new SimpleListProperty<>(messages);
 
@@ -27,5 +27,13 @@ public class MessagesModel {
 
     public void addMessage(Message message) {
         messages.add(message);
+    }
+
+    public void addMessages(Message[] msgArr) {
+        messages.addAll(msgArr);
+    }
+
+    public void clearMessages() {
+        messages.clear();
     }
 }

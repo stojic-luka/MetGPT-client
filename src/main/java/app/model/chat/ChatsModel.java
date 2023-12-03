@@ -17,8 +17,8 @@ public class ChatsModel {
         return chatsProperty;
     }
 
-    public void addChat(String title) {
-        chats.add(new Chat(title));
+    public void addChat(long chatId, String title) {
+        chats.add(new Chat(chatId, title));
     }
 
     public void addChat(Chat chat) {

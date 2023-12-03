@@ -10,13 +10,13 @@ import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.scene.control.MenuItem;
 
-public class NotepadController {
+public class NotepadTabController {
 
     private final NotesModel notesModel;
     private final NotepadTabView notepadView;
     private final NoteDialogController noteDialogController;
 
-    public NotepadController(NotepadTabView notepadView) {
+    public NotepadTabController(NotepadTabView notepadView) {
         this.notesModel = new NotesModel();
         this.notepadView = notepadView;
 

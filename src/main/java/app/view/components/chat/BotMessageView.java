@@ -8,21 +8,21 @@ import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Text;
 
-public class UserMessage extends VBox {
+public class BotMessageView extends VBox {
 
-    private final Color userTextFill = Color.rgb(236, 236, 241);
+    private final Color botTextFill = Color.rgb(209, 213, 219);
 
     private final Text senderName;
     private final BorderPane messageBubble;
 
-    public UserMessage(String msg) {
+    public BotMessageView(String msg) {
         super();
 
         Text txt = new Text(msg);
-        txt.setFill(userTextFill);
+        txt.setFill(botTextFill);
 
-        senderName = new Text("You");
-        senderName.setFill(userTextFill);
+        senderName = new Text("MetChat Bot");
+        senderName.setFill(botTextFill);
         senderName.getStyleClass().add("senderName");
 
         BorderPane message = new BorderPane();
@@ -37,8 +37,8 @@ public class UserMessage extends VBox {
                 20, 10, 0, 0);
         promptShadow.setSpread(0.4);
         messageBubble.setEffect(promptShadow);
-        messageBubble.setRight(message);
-        messageBubble.getStyleClass().add("message-bubble");
+        messageBubble.setLeft(message);
+        messageBubble.getStyleClass().add("bot-message-bubble");
 
         this.getChildren().addAll(senderName, messageBubble);
         this.setSpacing(5);

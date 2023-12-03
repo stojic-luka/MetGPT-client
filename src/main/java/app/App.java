@@ -1,8 +1,8 @@
 package app;
 
-import app.controller.CalendarController;
-import app.controller.ChatController;
-import app.controller.NotepadController;
+import app.controller.CalendarTabController;
+import app.controller.ChatTabController;
+import app.controller.NotepadTabController;
 import app.view.CalendarTabView;
 import app.view.ChatTabView;
 import app.view.NotepadTabView;
@@ -19,9 +19,9 @@ public class App extends Application {
         CalendarTabView calendarView = new CalendarTabView();
         NotepadTabView notepadView = new NotepadTabView();
 
-        var chatController = new ChatController(chatView);
-        var calendarController = new CalendarController(calendarView);
-        var notepadController = new NotepadController(notepadView);
+        var chatController = new ChatTabController(chatView);
+        var calendarController = new CalendarTabController(calendarView);
+        var notepadController = new NotepadTabController(notepadView);
 
         TabPane root = new TabPane();
         root.setTabClosingPolicy(TabPane.TabClosingPolicy.UNAVAILABLE);
