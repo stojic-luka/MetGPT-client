@@ -9,99 +9,68 @@ import java.time.Duration;
 import java.util.Map;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutionException;
-import java.util.function.Consumer;
 
 public class NetworkManager {
 
-    public static void sendGetRequestAsync(String urlString, Consumer<JsonObject> callback) {
-        HttpClient httpClient = HttpClient.newHttpClient();
+    private static final String BASE_URL = "http://127.0.0.1:8080/";
+    private static final HttpClient httpClient = HttpClient.newHttpClient();
 
-        HttpRequest request = HttpRequest.newBuilder()
-                .uri(URI.create(urlString))
-                .timeout(Duration.ofSeconds(10))
-                .header("Content-Type", "application/json")
-                .GET()
-                .build();
+    public static String getBaseUrl() {
+        return BASE_URL;
+    }
 
 //        httpClient.sendAsync(request, HttpResponse.BodyHandlers.ofString())
 //                .thenApply(response -> JsonManager.stringToJson(response.body()))
 //                .thenAccept(callback);
+//    
+    public static JsonObject sendGetRequestAsync(String urlString) throws InterruptedException, ExecutionException {
+        return sendAsync(
+                HttpRequest.newBuilder()
+                        .uri(URI.create(urlString))
+                        .timeout(Duration.ofSeconds(10))
+                        .header("Content-Type", "application/json")
+                        .GET()
+                        .build()
+        );
+    }
+
+    public static JsonObject sendPostRequestAsync(String urlString, Map objMessage) throws InterruptedException, ExecutionException {
+        return sendAsync(
+                HttpRequest.newBuilder()
+                        .uri(URI.create(urlString))
+                        .timeout(Duration.ofSeconds(10))
+                        .header("Content-Type", "application/json")
+                        .POST(HttpRequest.BodyPublishers.ofString(JsonManager.mapToJson(objMessage)))
+                        .build()
+        );
+    }
+
+    public static JsonObject sendPutRequestAsync(String urlString, Map objMessage) throws InterruptedException, ExecutionException {
+        return sendAsync(
+                HttpRequest.newBuilder()
+                        .uri(URI.create(urlString))
+                        .timeout(Duration.ofSeconds(10))
+                        .header("Content-Type", "application/json")
+                        .PUT(HttpRequest.BodyPublishers.ofString(JsonManager.mapToJson(objMessage)))
+                        .build()
+        );
+    }
+
+    public static JsonObject sendDeleteRequestAsync(String urlString) throws InterruptedException, ExecutionException {
+        return sendAsync(
+                HttpRequest.newBuilder()
+                        .uri(URI.create(urlString))
+                        .timeout(Duration.ofSeconds(10))
+                        .header("Content-Type", "application/json")
+                        .DELETE()
+                        .build()
+        );
+    }
+
+//
+    private static JsonObject sendAsync(HttpRequest request) throws InterruptedException, ExecutionException {
         CompletableFuture<HttpResponse<String>> requestFuture = httpClient.sendAsync(request, HttpResponse.BodyHandlers.ofString());
         CompletableFuture<JsonObject> requestFutureString = requestFuture.thenApply(response -> JsonManager.stringToJson(response.body()));
-        try {
-            callback.accept(requestFutureString.get());
-        } catch (InterruptedException | ExecutionException e) {
-            e.printStackTrace();
-        }
-    }
-
-    public static void sendPostRequestAsync(String urlString, Map objMessage, Consumer<JsonObject> callback) {
-        HttpClient httpClient = HttpClient.newHttpClient();
-
-        HttpRequest request = HttpRequest.newBuilder()
-                .uri(URI.create(urlString))
-                .timeout(Duration.ofSeconds(10))
-                .header("Content-Type", "application/json")
-                .POST(HttpRequest.BodyPublishers.ofString(JsonManager.mapToJson(objMessage)))
-                .build();
-
-//        httpClient.sendAsync(request, HttpResponse.BodyHandlers.ofString())
-//                .thenApply(response -> JsonManager.stringToJson(response.body()))
-//                .thenAccept(callback);
-        CompletableFuture<HttpResponse<String>> requestFuture = httpClient.sendAsync(request, HttpResponse.BodyHandlers.ofString());
-        CompletableFuture<JsonObject> requestFutureString = requestFuture.thenApply(response -> JsonManager.stringToJson(response.body()));
-        try {
-            callback.accept(requestFutureString.get());
-        } catch (InterruptedException | ExecutionException e) {
-            e.printStackTrace();
-        }
-    }
-
-    public static void sendPostRequestAsync(String urlString, Map objMessage) {
-        HttpClient httpClient = HttpClient.newHttpClient();
-
-        HttpRequest request = HttpRequest.newBuilder()
-                .uri(URI.create(urlString))
-                .timeout(Duration.ofSeconds(10))
-                .header("Content-Type", "application/json")
-                .POST(HttpRequest.BodyPublishers.ofString(JsonManager.mapToJson(objMessage)))
-                .build();
-
-//        httpClient.sendAsync(request, HttpResponse.BodyHandlers.ofString())
-//                .thenApply(response -> JsonManager.stringToJson(response.body()))
-//                .thenAccept(callback);
-        httpClient.sendAsync(request, HttpResponse.BodyHandlers.ofString());
-    }
-
-    public static void sendPutRequestAsync(String urlString, Map objMessage) {
-        HttpClient httpClient = HttpClient.newHttpClient();
-
-        HttpRequest request = HttpRequest.newBuilder()
-                .uri(URI.create(urlString))
-                .timeout(Duration.ofSeconds(10))
-                .header("Content-Type", "application/json")
-                .PUT(HttpRequest.BodyPublishers.ofString(JsonManager.mapToJson(objMessage)))
-                .build();
-
-//        httpClient.sendAsync(request, HttpResponse.BodyHandlers.ofString())
-//                .thenApply(response -> JsonManager.stringToJson(response.body()))
-//                .thenAccept(callback);
-        httpClient.sendAsync(request, HttpResponse.BodyHandlers.ofString());
-    }
-
-    public static void sendDeleteRequestAsync(String urlString) {
-        HttpClient httpClient = HttpClient.newHttpClient();
-
-        HttpRequest request = HttpRequest.newBuilder()
-                .uri(URI.create(urlString))
-                .timeout(Duration.ofSeconds(10))
-                .header("Content-Type", "application/json")
-                .DELETE()
-                .build();
-
-//        httpClient.sendAsync(request, HttpResponse.BodyHandlers.ofString())
-//                .thenApply(response -> JsonManager.stringToJson(response.body()))
-//                .thenAccept(callback);
-        httpClient.sendAsync(request, HttpResponse.BodyHandlers.ofString());
+        return requestFutureString.get();
     }
 }

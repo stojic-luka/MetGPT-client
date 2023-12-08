@@ -1,5 +1,6 @@
 package app.model.chat;
 
+import java.util.UUID;
 import javafx.beans.property.SimpleListProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -17,8 +18,12 @@ public class ChatsModel {
         return chatsProperty;
     }
 
-    public void addChat(long chatId, String title) {
-        chats.add(new Chat(chatId, title));
+    public void addChat(UUID chatId, String title) {
+        addChat(new Chat(chatId, title));
+    }
+
+    public void addChat(String chatId, String title) {
+        addChat(new Chat(chatId, title));
     }
 
     public void addChat(Chat chat) {

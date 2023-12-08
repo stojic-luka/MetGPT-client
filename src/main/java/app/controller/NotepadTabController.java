@@ -25,22 +25,14 @@ public class NotepadTabController {
         final EventHandler<ActionEvent> editLambda = e -> {
             MenuItem menuItem = (MenuItem) e.getSource();
             Note note = (Note) menuItem.getParentPopup().getUserData();
-
-            System.out.println(note);
-
-            // TODO: fix edit button
-            // moguce resenje prosledi lambdu koja se izvrsava na cancel, save ili exit
-            notesModel.getNotes().remove(note);
-            noteDialogController.getEditDialog(note
-            //                    () -> {
-            //                    }
-            ).showDialog();
+            
+            noteDialogController.getEditDialog(note).showDialog();
         };
 
         final EventHandler<ActionEvent> deleteLambda = e -> {
             MenuItem menuItem = (MenuItem) e.getSource();
             Note note = (Note) menuItem.getParentPopup().getUserData();
-
+            
             notesModel.getNotes().remove(note);
         };
 
@@ -51,7 +43,6 @@ public class NotepadTabController {
                         NoteView noteView = new NoteView(note.getTitle(), note.getContent());
                         noteView.getEditItem().setOnAction(editLambda);
                         noteView.getDeleteItem().setOnAction(deleteLambda);
-                        noteView.getContextMenu().setUserData(note);
                         note.setParent(noteView);
 
                         notepadView.getNotesVBox().getChildren().add(noteView);
@@ -67,6 +58,8 @@ public class NotepadTabController {
         
         notepadView.getAddNoteButton().setOnAction(e -> noteDialogController.getAddDialog().showDialog());
 
-//        notepadView.getSearchTextField()
+        notepadView.getSearchTextField().textProperty().addListener((obs, oldVal, newVal) -> {
+            
+        });
     }
 }

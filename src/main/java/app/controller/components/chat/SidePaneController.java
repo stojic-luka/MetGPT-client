@@ -1,18 +1,12 @@
 package app.controller.components.chat;
 
+import app.api.ChatApiService;
 import app.model.chat.Chat;
 import app.model.chat.ChatsModel;
-import app.util.NetworkManager;
+import app.model.chat.MessagesModel;
 import app.view.components.chat.ChatView;
 import app.view.components.chat.SidePaneView;
-import com.google.gson.JsonElement;
-import com.google.gson.JsonObject;
-import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
-import java.util.Map;
-import java.util.Random;
-import javafx.application.Platform;
-import javafx.beans.property.SimpleLongProperty;
+import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.ListChangeListener;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
@@ -26,31 +20,32 @@ public class SidePaneController {
 
     private final ChatsModel chatsModel;
     private final SidePaneView sidePaneView;
-    private final SimpleLongProperty currentChatId;
+    private final SimpleStringProperty currentChatId;
+    private final MessagesModel messagesModel;
 
-    public SidePaneController(SidePaneView sidePaneView, ChatsModel chatsModel, SimpleLongProperty currentChatId) {
+    public SidePaneController(SidePaneView sidePaneView, ChatsModel chatsModel, MessagesModel messagesModel, SimpleStringProperty currentChatId) {
         this.chatsModel = chatsModel;
+        this.messagesModel = messagesModel;
         this.sidePaneView = sidePaneView;
         this.currentChatId = currentChatId;
 
         final EventHandler<MouseEvent> changeChat = e -> {
             ChatView chatView = (ChatView) e.getSource();
             Chat chat = (Chat) chatView.getContextMenu().getUserData();
-
-            if (chat.getChatId() != currentChatId.get()) {
-                currentChatId.set(chat.getChatId());
+            if (!chat.getChatId().toString().equals(currentChatId.get())) {
+                currentChatId.set(chat.getChatId().toString());
             }
         };
 
-        final EventHandler<KeyEvent> sendOnEnter = e -> {
+        final EventHandler<KeyEvent> renameOnEnter = e -> {
             if (e.getCode() == KeyCode.ENTER) {
                 ChatView chatView = (ChatView) ((TextField) e.getSource()).getParent();
                 Chat chat = (Chat) chatView.getContextMenu().getUserData();
 
                 chat.setTitle(chatView.getRenameChatField().getText());
-                NetworkManager.sendPutRequestAsync(
-                        String.format("http://127.0.0.1:8080/api/v1/chats/%d", chat.getChatId()),
-                        Map.ofEntries(Map.entry("title", chatView.getRenameChatField().getText()))
+                ChatApiService.renameChat(
+                        chat.getChatId().toString(),
+                        chatView.getRenameChatField().getText()
                 );
                 chatView.toggleRename();
             }
@@ -76,7 +71,7 @@ public class SidePaneController {
                         ChatView chatView = new ChatView(chat.getTitle());
                         chatView.setOnMousePressed(changeChat);
                         chatView.getRenameItem().setOnAction(renameLambda);
-                        chatView.getRenameChatField().setOnKeyPressed(sendOnEnter);
+                        chatView.getRenameChatField().setOnKeyPressed(renameOnEnter);
                         chatView.getDeleteItem().setOnAction(deleteLambda);
                         chatView.getContextMenu().setUserData(chat);
                         chatView.getChatTitle().textProperty().bind(chat.titleProperty());
@@ -86,50 +81,16 @@ public class SidePaneController {
                     }
                 } else if (change.wasRemoved()) {
                     for (Chat chat : change.getRemoved()) {
-                        NetworkManager.sendDeleteRequestAsync(
-                                String.format("http://127.0.0.1:8080/api/v1/chats/%d", chat.getChatId())
-                        );
-
+                        ChatApiService.deleteChat(chat.getChatId().toString());
                         sidePaneView.getChatsVBox().getChildren().remove(chat.getParent());
-                    }
-                } else if (change.wasUpdated()) {
-                    for (int i = change.getFrom(); i <= change.getTo(); i++) {
-                        Chat updatedChat = chatsModel.getChats().get(i);
-                        System.out.println("Updated chat: " + updatedChat.getTitle());
+                        messagesModel.clearMessages();
                     }
                 }
             }
         });
 
-        sidePaneView.getAddChatButton().setOnAction(e -> {
-            NetworkManager.sendPostRequestAsync(
-                    "http://127.0.0.1:8080/api/v1/chats",
-                    Map.ofEntries(Map.entry("title", "New chat"))
-            );
+        sidePaneView.getAddChatButton().setOnAction(e -> ChatApiService.addChat(chatsModel::addChat, currentChatId::set));
 
-            chatsModel.addChat(new Random().nextInt(100) + 1, "New chat");
-        });
-
-        loadChats();
-    }
-
-    private void loadChats() {
-        NetworkManager.sendGetRequestAsync(
-                "http://127.0.0.1:8080/api/v1/chats",
-                response -> {
-                    for (JsonElement responseJsonElement : response.getAsJsonArray("chats")) {
-                        JsonObject responseJsonObject = responseJsonElement.getAsJsonObject();
-                        String createdAtString = responseJsonObject.getAsJsonPrimitive("createdAt").getAsString();
-
-                        Chat chat = new Chat(
-                                responseJsonObject.get("chatId").getAsLong(),
-                                responseJsonObject.get("title").getAsString(),
-                                LocalDateTime.parse(createdAtString, DateTimeFormatter.ISO_DATE_TIME)
-                        );
-
-                        Platform.runLater(() -> chatsModel.addChat(chat));
-                    }
-                }
-        );
+        ChatApiService.loadChats(chatsModel::addChat);
     }
 }

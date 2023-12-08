@@ -18,12 +18,6 @@ public class NoteDialogController {
         dialog.getTitleTextField().textProperty().addListener((obs, oldVal, newVal) -> note.setTitle(newVal));
         dialog.getNoteTextArea().textProperty().addListener((obs, oldVal, newVal) -> note.setContent(newVal));
 
-        dialog.getSaveButton().setOnAction(e -> {
-            notesModel.addNote(note);
-            dialog.closeDialog();
-            note.clear();
-        });
-
         dialog.getCancelButton().setOnAction(e -> {
             dialog.closeDialog();
             note.clear();
@@ -40,9 +34,9 @@ public class NoteDialogController {
         dialog.getNoteTextArea().setText(content);
 
         dialog.getSaveButton().setOnAction(e -> {
-            notesModel.addNote(this.note);
+            notesModel.addNote(note);
             dialog.closeDialog();
-            this.note.clear();
+            note.clear();
         });
 
         return dialog;

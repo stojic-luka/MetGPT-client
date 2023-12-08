@@ -1,26 +1,39 @@
 package app.model.chat;
 
 import java.time.LocalDateTime;
+import java.util.UUID;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
 import javafx.scene.Node;
 
 public class Chat {
 
-    private final long chatId;
+    private final UUID chatId;
     private final StringProperty title;
     private final LocalDateTime createdAt;
 
     private Node parent;
 
-    public Chat(long chatId, String title) {
+    public Chat(UUID chatId, String title) {
         this.chatId = chatId;
         this.title = new SimpleStringProperty(title);
         this.createdAt = LocalDateTime.now();
     }
 
-    public Chat(long chatId, String title, LocalDateTime createdAt) {
+    public Chat(String chatId, String title) {
+        this.chatId = UUID.fromString(chatId);
+        this.title = new SimpleStringProperty(title);
+        this.createdAt = LocalDateTime.now();
+    }
+
+    public Chat(UUID chatId, String title, LocalDateTime createdAt) {
         this.chatId = chatId;
+        this.title = new SimpleStringProperty(title);
+        this.createdAt = createdAt;
+    }
+
+    public Chat(String chatId, String title, LocalDateTime createdAt) {
+        this.chatId = UUID.fromString(chatId);
         this.title = new SimpleStringProperty(title);
         this.createdAt = createdAt;
     }
@@ -29,7 +42,7 @@ public class Chat {
         return title;
     }
 
-    public long getChatId() {
+    public UUID getChatId() {
         return chatId;
     }
 

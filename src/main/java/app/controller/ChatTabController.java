@@ -5,7 +5,7 @@ import app.controller.components.chat.SidePaneController;
 import app.model.chat.ChatsModel;
 import app.model.chat.MessagesModel;
 import app.view.ChatTabView;
-import javafx.beans.property.SimpleLongProperty;
+import javafx.beans.property.SimpleStringProperty;
 
 public class ChatTabController {
 
@@ -15,17 +15,20 @@ public class ChatTabController {
     private final SidePaneController sidePaneController;
     private final MessagesController messagesController;
 
-    private final SimpleLongProperty currentChatId;
+    private final SimpleStringProperty currentChatId;
 
     public ChatTabController(ChatTabView chatTabView) {
-        this.currentChatId = new SimpleLongProperty();
+        this.currentChatId = new SimpleStringProperty(null);
         
         this.chatsModel = new ChatsModel();
         this.messagesModel = new MessagesModel();
         this.chatTabView = chatTabView;
-        this.messagesController = new MessagesController(chatTabView.getMessagesView(), messagesModel, currentChatId);
-        this.sidePaneController = new SidePaneController(chatTabView.getSidePaneView(), chatsModel, currentChatId);
+        this.messagesController = new MessagesController(chatTabView.getMessagesView(), chatsModel, messagesModel, currentChatId);
+        this.sidePaneController = new SidePaneController(chatTabView.getSidePaneView(), chatsModel, messagesModel, currentChatId);
         
-        currentChatId.addListener((observable, oldValue, newValue) -> messagesController.clearAndLoadMessages(newValue.longValue()));
+        currentChatId.addListener((observable, oldValue, newValue) -> {
+            messagesModel.clearMessages();
+            messagesController.loadMessages(newValue);
+        });
     }
 }
