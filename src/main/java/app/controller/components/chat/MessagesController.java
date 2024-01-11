@@ -70,6 +70,7 @@ public class MessagesController {
 
         if (currentChatId.get() == null) {
             ChatApiService.addChat(chatsModel::addChat, currentChatId::set);
+            System.out.println(currentChatId.get());
         }
 
         this.promptView.getPromptTextArea().clear();

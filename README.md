@@ -1,2 +1,2 @@
-# MetGPT-client
+# MetGPT-Client
  This is a school project
