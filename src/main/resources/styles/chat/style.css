@@ -1,0 +1,64 @@
+#messagesScroll,
+#messagesScroll .viewport
+{ -fx-background-color: transparent; }
+
+#textArea .scroll-pane,
+#textArea .scroll-pane .viewport,
+#textArea .scroll-pane .content
+{ -fx-background-color: transparent; }
+
+
+#textArea {
+    -fx-text-fill: #ebebec;
+    -fx-background-color: transparent;
+    -fx-font-size: 14px;
+}
+
+#textArea *.text {
+    -fx-text-alignment: left;
+}
+
+#prompt {
+    -fx-background-color: #40414F;
+    -fx-background-radius: 10px;
+}
+
+.senderName {
+    -fx-font-size: 16px;
+    -fx-font-weight: bold;
+}
+
+.message-bubble {
+    -fx-background-color: #343541;
+    -fx-text-fill: #D1D5DB;
+    
+    -fx-border-color: gray;
+    -fx-border-width: 1px;
+    -fx-background-radius: 10px;
+    -fx-border-radius: 10px;
+}
+.bot-message-bubble {
+    -fx-background-color: #444654;
+    -fx-text-fill: #ECECF1;
+    
+    -fx-border-color: gray;
+    -fx-border-width: 1px;
+    -fx-background-radius: 10px;
+    -fx-border-radius: 10px;
+}
+
+/* main pane */
+
+#chat-tab {
+    
+}
+
+/* side pane */
+
+.toggle_button {
+    -fx-font-size: 20px !important;
+}
+
+.new-chat-button {
+    background-color: black;
+}

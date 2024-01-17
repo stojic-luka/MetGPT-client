@@ -19,28 +19,37 @@ public class SidePaneView extends HBox {
     
     public SidePaneView() {
         super();
+        this.getStylesheets().add(getClass().getClassLoader().getResource("styles/chat/style.css").toExternalForm());
         
         addChatButton = new Button("New Chat");
         addChatButton.setAlignment(Pos.CENTER_LEFT);
         addChatButton.setMaxWidth(Double.MAX_VALUE);
+        addChatButton.getStyleClass().add("new-chat-button");
         VBox.setMargin(addChatButton, new Insets(5));
 
         chatsVBox = new VBox();
+//        chatsVBox.getStyleClass().add("");
 
         ScrollPane scrollPane = new ScrollPane();
         scrollPane.setContent(chatsVBox);
         scrollPane.setFitToHeight(true);
         scrollPane.setFitToWidth(true);
+//        scrollPane.getStyleClass().add("");
         
         VBox vBox = new VBox(addChatButton, scrollPane);
         vBox.setSpacing(5);
         vBox.setMinWidth(250);
         vBox.setMaxWidth(250);
         vBox.setMaxHeight(Double.MAX_VALUE);
+//        vBox.getStyleClass().add("");
         vBox.toFront();
 
-        Button toggleButton = new Button();
+        Button toggleButton = new Button("≡");
         toggleButton.setPrefSize(40, 40);
+        toggleButton.setStyle(
+                "-fx-font-size: 20px"
+        );
+        toggleButton.getStyleClass().add("toggle-button");
         HBox.setMargin(toggleButton, new Insets(10));
 
         this.getChildren().addAll(vBox, toggleButton);

@@ -14,6 +14,7 @@ public class MessagesView extends BorderPane {
 
     public MessagesView() {
         super();
+        this.getStylesheets().add(getClass().getClassLoader().getResource("styles/chat/style.css").toExternalForm());
         
         messagesVBox = new VBox();
         messagesVBox.setSpacing(10);

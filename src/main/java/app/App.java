@@ -32,7 +32,14 @@ public class App extends Application {
         );
 
         Scene scene = new Scene(root, 1000, 600);
-        scene.getStylesheets().add(getClass().getClassLoader().getResource("styles/app.css").toExternalForm());
+
+        scene.getStylesheets().addAll(
+//                getClass().getClassLoader().getResource("styles/chat/style.css").toExternalForm(),
+                getClass().getClassLoader().getResource("styles/calendar/style.css").toExternalForm(),
+                getClass().getClassLoader().getResource("styles/notepad/style.css").toExternalForm(),
+                getClass().getClassLoader().getResource("styles/app.css").toExternalForm()
+        );
+
         stage.setTitle("ChatBot");
         stage.setMinHeight(375);
         stage.setMinWidth(480);

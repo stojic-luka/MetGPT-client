@@ -15,11 +15,11 @@ import javafx.application.Platform;
 
 public class ChatApiService {
 
-    private static final String baseUrl = "http://127.0.0.1:8080/api/v1";
+    private static final String BASE_URL = "http://127.0.0.1:8080/api/v1";
 
     public static void loadChats(Consumer<Chat> addChatFunc) {
         new Thread(() -> {
-            String reqUrl = baseUrl + "/chats";
+            String reqUrl = BASE_URL + "/chats";
 
             try {
                 JsonObject respObject = NetworkManager.sendGetRequestAsync(reqUrl);
@@ -33,7 +33,6 @@ public class ChatApiService {
                             LocalDateTime.parse(createdAtString, DateTimeFormatter.ISO_DATE_TIME)
                     );
 
-                    System.out.println(chat);
                     Platform.runLater(() -> addChatFunc.accept(chat));
                 }
             } catch (InterruptedException e) {
@@ -45,30 +44,34 @@ public class ChatApiService {
     }
 
     public static void addChat(BiConsumer<String, String> addChatFunc, Consumer<String> setCurrentChat) {
-        new Thread(() -> {
-            String newChatName = "New Chat";
+        try {
+            Thread thread = new Thread(() -> {
+                String newChatName = "New Chat";
 
-            String reqUrl = baseUrl + "/chats";
-            Map body = Map.ofEntries(Map.entry("title", newChatName));
+                String reqUrl = BASE_URL + "/chats";
+                Map body = Map.ofEntries(Map.entry("title", newChatName));
 
-            try {
-                JsonObject respObject = NetworkManager.sendPostRequestAsync(reqUrl, body);
-                System.out.println(respObject);
-                String chatId = respObject.get("chatId").getAsString();
-                System.out.println("chatid: " + chatId);
-                setCurrentChat.accept(chatId);
-                Platform.runLater(() -> addChatFunc.accept(chatId, newChatName));
-            } catch (InterruptedException e) {
-                System.out.println("InterruptedException");
-            } catch (ExecutionException e) {
-                System.out.println("ExecutionException");
-            }
-        }).start();
+                try {
+                    JsonObject respObject = NetworkManager.sendPostRequestAsync(reqUrl, body);
+                    String chatId = respObject.get("chatId").getAsString();
+                    setCurrentChat.accept(chatId);
+                    Platform.runLater(() -> addChatFunc.accept(chatId, newChatName));
+                } catch (InterruptedException ex) {
+                    System.out.println("InterruptedException");
+                } catch (ExecutionException e) {
+                    System.out.println("ExecutionException");
+                }
+            });
+            thread.start();
+            thread.join();
+        } catch (InterruptedException ex) {
+            System.out.println("InterruptedException");
+        }
     }
 
     public static void renameChat(String chatId, String chatName) {
         new Thread(() -> {
-            String reqUrl = String.format("%s/chats/%s", baseUrl, chatId);
+            String reqUrl = String.format("%s/chats/%s", BASE_URL, chatId);
             Map body = Map.ofEntries(Map.entry("title", chatName));
 
             try {
@@ -83,7 +86,7 @@ public class ChatApiService {
 
     public static void deleteChat(String chatId) {
         new Thread(() -> {
-            String reqUrl = String.format("%s/chats/%s", baseUrl, chatId);
+            String reqUrl = String.format("%s/chats/%s", BASE_URL, chatId);
 
             try {
                 NetworkManager.sendDeleteRequestAsync(reqUrl);
@@ -97,7 +100,7 @@ public class ChatApiService {
 
     public static void getMessages(Consumer<Message> addMessageFunc, String chatId) {
         new Thread(() -> {
-            String reqUrl = String.format("%s/chats/%s/messages", baseUrl, chatId);
+            String reqUrl = String.format("%s/chats/%s/messages", BASE_URL, chatId);
 
             try {
                 JsonObject respObject = NetworkManager.sendGetRequestAsync(reqUrl);
@@ -123,14 +126,17 @@ public class ChatApiService {
 
     public static void sendMessage(BiConsumer<String, Boolean> addMessageFunc, String chatId, String messageString) {
         new Thread(() -> {
-            String reqUrl = String.format("%s/chats/%s/chat", baseUrl, chatId);
-            Map body = Map.ofEntries(Map.entry("input", messageString));
+            String reqUrl = String.format("%s/chats/%s/chat", BASE_URL, chatId);
+            Map body = Map.ofEntries(Map.entry("content", messageString));
 
             try {
                 JsonObject respObject = NetworkManager.sendPostRequestAsync(reqUrl, body);
-                System.out.println(respObject);
-                String msg = respObject.get("response").getAsString();
-                Platform.runLater(() -> addMessageFunc.accept(msg, true));
+                if (!respObject.get("success").getAsBoolean()) {
+                    Platform.runLater(() -> addMessageFunc.accept("An error occured!", true));
+                } else {
+                    String msg = respObject.get("response").getAsString();
+                    Platform.runLater(() -> addMessageFunc.accept(msg, true));
+                }
             } catch (InterruptedException e) {
                 System.out.println("InterruptedException");
             } catch (ExecutionException e) {

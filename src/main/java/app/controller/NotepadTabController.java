@@ -53,7 +53,6 @@ public class NotepadTabController {
                     }
                 }
             }
-            System.out.println(notesModel.getNotes());
         });
         
         notepadView.getAddNoteButton().setOnAction(e -> noteDialogController.getAddDialog().showDialog());

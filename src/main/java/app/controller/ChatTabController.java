@@ -27,6 +27,9 @@ public class ChatTabController {
         this.sidePaneController = new SidePaneController(chatTabView.getSidePaneView(), chatsModel, messagesModel, currentChatId);
         
         currentChatId.addListener((observable, oldValue, newValue) -> {
+            if (newValue == null)
+                return;
+            
             messagesModel.clearMessages();
             messagesController.loadMessages(newValue);
         });

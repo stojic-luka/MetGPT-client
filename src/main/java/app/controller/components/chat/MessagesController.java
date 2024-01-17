@@ -8,6 +8,7 @@ import app.view.components.chat.BotMessageView;
 import app.view.components.chat.UserMessageView;
 import app.view.components.chat.MessagesView;
 import app.view.components.chat.PromptView;
+import javafx.application.Platform;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.ListChangeListener;
 import javafx.scene.control.TextArea;
@@ -56,7 +57,7 @@ public class MessagesController {
                         }
                     }
                 } else if (change.wasRemoved()) {
-                    messagesView.getMessagesVBox().getChildren().clear();
+                    Platform.runLater(() -> messagesView.getMessagesVBox().getChildren().clear());
                 }
             }
         });
@@ -70,7 +71,6 @@ public class MessagesController {
 
         if (currentChatId.get() == null) {
             ChatApiService.addChat(chatsModel::addChat, currentChatId::set);
-            System.out.println(currentChatId.get());
         }
 
         this.promptView.getPromptTextArea().clear();

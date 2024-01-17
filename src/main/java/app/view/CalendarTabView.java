@@ -19,7 +19,8 @@ public class CalendarTabView extends Tab {
 
     public CalendarTabView() {
         super();
-        setText("Calendar");
+        this.setText("Calendar");
+        this.setId("calendar-tab");
 
         c = Calendar.getInstance();
         c.set(Calendar.DATE, 1);

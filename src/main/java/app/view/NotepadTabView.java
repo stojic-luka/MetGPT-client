@@ -23,6 +23,7 @@ public class NotepadTabView extends Tab {
     public NotepadTabView() {
         super();
         this.setText("NotePad");
+        this.setId("notepad-tab");
 
         notesVBox = new VBox();
         ScrollPane scrollPane = new ScrollPane(notesVBox);

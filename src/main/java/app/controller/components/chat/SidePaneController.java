@@ -83,7 +83,11 @@ public class SidePaneController {
                     for (Chat chat : change.getRemoved()) {
                         ChatApiService.deleteChat(chat.getChatId().toString());
                         sidePaneView.getChatsVBox().getChildren().remove(chat.getParent());
-                        messagesModel.clearMessages();
+
+                        if (chat.getChatId().toString().equals(currentChatId.get())) {
+                            messagesModel.clearMessages();
+                            currentChatId.set(null);
+                        }
                     }
                 }
             }
