@@ -35,6 +35,10 @@ public class SidePaneController {
             if (!chat.getChatId().toString().equals(currentChatId.get())) {
                 currentChatId.set(chat.getChatId().toString());
             }
+            sidePaneView.getChatsVBox().getChildren().forEach(c -> {
+                ((ChatView)c).isSelected(false);
+            });
+            chatView.isSelected(true);
         };
 
         final EventHandler<KeyEvent> renameOnEnter = e -> {
@@ -77,7 +81,7 @@ public class SidePaneController {
                         chatView.getChatTitle().textProperty().bind(chat.titleProperty());
                         chat.setParent(chatView);
 
-                        sidePaneView.getChatsVBox().getChildren().add(chatView);
+                        sidePaneView.getChatsVBox().getChildren().add(0, chatView);
                     }
                 } else if (change.wasRemoved()) {
                     for (Chat chat : change.getRemoved()) {

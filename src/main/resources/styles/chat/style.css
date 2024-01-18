@@ -38,7 +38,7 @@
     -fx-border-radius: 10px;
 }
 .bot-message-bubble {
-    -fx-background-color: #444654;
+    -fx-background-color: #3f414f;
     -fx-text-fill: #ECECF1;
     
     -fx-border-color: gray;
@@ -55,10 +55,6 @@
 
 /* side pane */
 
-.toggle_button {
-    -fx-font-size: 20px !important;
-}
-
-.new-chat-button {
-    background-color: black;
+.chat-selected {
+    -fx-background-color: #3f414f;
 }

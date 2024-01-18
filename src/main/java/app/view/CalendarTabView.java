@@ -12,7 +12,6 @@ import javafx.scene.layout.VBox;
 import javafx.util.Duration;
 
 public class CalendarTabView extends Tab {
-
     private Calendar c = null;
     private final GridPane grid = new GridPane();
     private final Label dateLabel = new Label();
@@ -62,11 +61,9 @@ public class CalendarTabView extends Tab {
 
         updateGridCalendar();
         this.setContent(
-                new VBox(
-                        new HBox(leftButton, dateLabel, rightButton),
-                        grid
-                )
-        );
+            new VBox(
+                new HBox(leftButton, dateLabel, rightButton),
+                grid));
     }
 
     private void updateGridCalendar() {

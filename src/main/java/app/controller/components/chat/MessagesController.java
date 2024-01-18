@@ -5,9 +5,9 @@ import app.model.chat.ChatsModel;
 import app.model.chat.Message;
 import app.model.chat.MessagesModel;
 import app.view.components.chat.BotMessageView;
-import app.view.components.chat.UserMessageView;
 import app.view.components.chat.MessagesView;
 import app.view.components.chat.PromptView;
+import app.view.components.chat.UserMessageView;
 import javafx.application.Platform;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.ListChangeListener;
@@ -15,7 +15,6 @@ import javafx.scene.control.TextArea;
 import javafx.scene.input.KeyCode;
 
 public class MessagesController {
-
     private final MessagesModel messagesModel;
     private final ChatsModel chatsModel;
     private final MessagesView messagesView;
@@ -63,6 +62,12 @@ public class MessagesController {
         });
     }
 
+    /**
+     * Process the message entered by the user.
+     *
+     * @param  None
+     * @return None
+     */
     private void processMessage() {
         String messageString = this.promptView.getPromptTextArea().getText().trim();
         if (messageString.isEmpty()) {
@@ -78,6 +83,11 @@ public class MessagesController {
         ChatApiService.sendMessage(messagesModel::addMessage, currentChatId.get(), messageString);
     }
 
+    /**
+     * Loads messages for a given chat ID.
+     *
+     * @param chatId the ID of the chat for which to load messages
+     */
     public void loadMessages(String chatId) {
         ChatApiService.getMessages(messagesModel::addMessage, chatId);
     }

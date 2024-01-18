@@ -12,7 +12,6 @@ import javafx.scene.control.TabPane;
 import javafx.stage.Stage;
 
 public class App extends Application {
-
     @Override
     public void start(Stage stage) {
         ChatTabView chatView = new ChatTabView();
@@ -26,19 +25,17 @@ public class App extends Application {
         TabPane root = new TabPane();
         root.setTabClosingPolicy(TabPane.TabClosingPolicy.UNAVAILABLE);
         root.getTabs().addAll(
-                chatView,
-                calendarView,
-                notepadView
-        );
+            chatView,
+            calendarView,
+            notepadView);
 
         Scene scene = new Scene(root, 1000, 600);
 
         scene.getStylesheets().addAll(
-//                getClass().getClassLoader().getResource("styles/chat/style.css").toExternalForm(),
-                getClass().getClassLoader().getResource("styles/calendar/style.css").toExternalForm(),
-                getClass().getClassLoader().getResource("styles/notepad/style.css").toExternalForm(),
-                getClass().getClassLoader().getResource("styles/app.css").toExternalForm()
-        );
+            //                getClass().getClassLoader().getResource("styles/chat/style.css").toExternalForm(),
+            getClass().getClassLoader().getResource("styles/calendar/style.css").toExternalForm(),
+            getClass().getClassLoader().getResource("styles/notepad/style.css").toExternalForm(),
+            getClass().getClassLoader().getResource("styles/app.css").toExternalForm());
 
         stage.setTitle("ChatBot");
         stage.setMinHeight(375);
